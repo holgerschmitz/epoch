@@ -62,6 +62,7 @@ MODULE diagnostics
   INTEGER, SAVE :: sdf_max_string_length, max_string_length
 
   LOGICAL :: debug_hs = .FALSE.
+  CHARACTER(len=1024) :: debug_hs_message
 
   ! Data structures for tracking the list of strings written to '.visit' files
   TYPE string_entry
@@ -1910,7 +1911,11 @@ CONTAINS
         END IF
 
         IF (debug_hs) THEN
-          PRINT*, 'checkpoint A', rank, i0, i1, j0, j1, k0, k1
+          WRITE(debug_hs_message, &
+            "(A11,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4)") &
+            'checkpoint ', rank, ' ', i0, ' ', i1, ' ', j0, ' ', j1, &
+            ' ', k0, ' ', k1
+          PRINT*, debug_hs_message
         END IF
           
         CALL sdf_write_plain_variable(sdf_handle, TRIM(temp_block_id), &
