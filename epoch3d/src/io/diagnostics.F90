@@ -61,6 +61,8 @@ MODULE diagnostics
   INTEGER, SAVE :: last_step = -1
   INTEGER, SAVE :: sdf_max_string_length, max_string_length
 
+  LOGICAL :: debug_hs = .FALSE.
+
   ! Data structures for tracking the list of strings written to '.visit' files
   TYPE string_entry
     CHARACTER(LEN=string_length) :: text
@@ -375,6 +377,10 @@ CONTAINS
 
       nstep_prev = step
 
+      IF (rank == 0) THEN
+        PRINT*, 'n_subsets', n_subsets
+      END IF
+    
       DO isubset = 1, n_subsets
         errcode = 0
         sub => subset_list(isubset)
@@ -484,8 +490,10 @@ CONTAINS
 
       CALL write_field(c_dump_ex, code, 'ex', 'Electric Field/Ex', 'V/m', &
           c_stagger_ex, ex)
+      debug_hs = .TRUE.
       CALL write_field(c_dump_ey, code, 'ey', 'Electric Field/Ey', 'V/m', &
           c_stagger_ey, ey)
+      debug_hs = .FALSE.
       CALL write_field(c_dump_ez, code, 'ez', 'Electric Field/Ez', 'V/m', &
           c_stagger_ez, ez)
 
@@ -1816,6 +1824,10 @@ CONTAINS
 
     dims = (/nx_global, ny_global, nz_global/)
 
+    IF (rank == 0 .AND. debug_hs) THEN
+      PRINT*, 'convert', convert
+    END IF
+  
     IF (convert) THEN
       subtype  = subtype_field_r4
       IF (id == c_dump_jx .OR. id == c_dump_jy .OR. id == c_dump_jz) THEN
@@ -1897,6 +1909,10 @@ CONTAINS
           k1 = k0
         END IF
 
+        IF (debug_hs) THEN
+          PRINT*, 'checkpoint A', rank, i0, i1, j0, j1, k0, k1
+        END IF
+          
         CALL sdf_write_plain_variable(sdf_handle, TRIM(temp_block_id), &
             TRIM(temp_name), TRIM(units), new_dims, stagger, &
             TRIM(temp_grid_id), array(i0:i1,j0:j1,k0:k1), &
