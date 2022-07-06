@@ -3626,7 +3626,7 @@ CONTAINS
     WRITE(filename, "(A2,I0.5,A1,I0.3,A4)") block_id, step, "-", rank, ".out"
     PRINT*, "FILE ", TRIM(filename), nx_global_min, nx_global_max
 
-    OPEN(67, file = filename, status = 'new')
+    OPEN(67, file = TRIM(filename), status = 'new')
     DO iy = 1, ny
       DO iz = 1, nz
         WRITE(67,*) iy+ny_global_min, iz+nz_global_min, array(loc_x, iy, iz)
