@@ -1912,14 +1912,18 @@ CONTAINS
 
         IF (debug_hs) THEN
           WRITE(debug_hs_message, &
-            "(A13,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4)") &
+            "(A13,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4)") &
             'checkpoint A ', rank, ' ', i0, ' ', i1, ' ', j0, ' ', j1, &
-            ' ', k0, ' ', k1
+            ' ', k0, ' ', k1, ' ', nx, ' ', ny, ' ', nz
           PRINT*, TRIM(debug_hs_message)
           WRITE(debug_hs_message, &
             "(A13,I4,A1,I4,A1,I4,A1,I4,A1,I4)") &
             'checkpoint B ', rank, ' ', new_dims(1), ' ', new_dims(2), &
             ' ', new_dims(3), ' ', stagger
+          PRINT*, TRIM(debug_hs_message)
+          WRITE(debug_hs_message, &
+            "(A13,I4,A1,I4,A1,I4,A1,I4)") &
+            'checkpoint C ', rank, ' ', nx, ' ', ny, ' ', nz
           PRINT*, TRIM(debug_hs_message)
         END IF
           
