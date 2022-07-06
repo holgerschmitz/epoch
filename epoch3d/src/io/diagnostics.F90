@@ -1915,12 +1915,12 @@ CONTAINS
             "(A13,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4)") &
             'checkpoint A ', rank, ' ', i0, ' ', i1, ' ', j0, ' ', j1, &
             ' ', k0, ' ', k1
-          PRINT*, debug_hs_message
+          PRINT*, TRIM(debug_hs_message)
           WRITE(debug_hs_message, &
             "(A13,I4,A1,I4,A1,I4,A1,I4,A1,I4)") &
             'checkpoint B ', rank, ' ', new_dims(1), ' ', new_dims(2), &
             ' ', new_dims(3), ' ', stagger
-          PRINT*, debug_hs_message
+          PRINT*, TRIM(debug_hs_message)
         END IF
           
         CALL sdf_write_plain_variable(sdf_handle, TRIM(temp_block_id), &
