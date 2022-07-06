@@ -3610,11 +3610,16 @@ CONTAINS
     CHARACTER(LEN=*), INTENT(IN) :: block_id 
     REAL(num), DIMENSION(1-ng:,1-ng:,1-ng:), INTENT(IN) :: array
 
+    INTEGER:: loc_min
     CHARACTER(LEN=1024) :: filename
+
+    IF (cell_x_min(rank)>70 .OR. cell_x_max(rank)<70) THEN
+      RETURN
+    END IF
 
     WRITE(filename, "(A2,I0.5,A1,I0.3,A4)") block_id, step, "-", rank, ".out"
     IF (rank == 0) THEN
-      PRINT*, "FILE", TRIM(filename)
+      PRINT*, "FILE ", TRIM(filename), cell_x_min, cell_x_max
     END IF
   END SUBROUTINE
 END MODULE diagnostics
