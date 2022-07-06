@@ -1894,6 +1894,9 @@ CONTAINS
         temp_block_id = TRIM(block_id)// '/c_' // TRIM(sub%name)
         temp_name = TRIM(name) // '/Core_' // TRIM(sub%name)
 
+        IF (rank == 0) THEN
+          PRINT*, 'SLICE', temp_block_id, temp_name
+        END IF
         i0 = ran_sec(1,1); i1 = ran_sec(2,1) - 1
         j0 = ran_sec(1,2); j1 = ran_sec(2,2) - 1
         k0 = ran_sec(1,3); k1 = ran_sec(2,3) - 1
@@ -1910,22 +1913,23 @@ CONTAINS
           k1 = k0
         END IF
 
-        IF (debug_hs) THEN
-          WRITE(debug_hs_message, &
-            "(A13,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4)") &
-            'checkpoint A ', rank, ' ', i0, ' ', i1, ' ', j0, ' ', j1, &
-            ' ', k0, ' ', k1, ' ', nx, ' ', ny, ' ', nz
-          PRINT*, TRIM(debug_hs_message)
-          WRITE(debug_hs_message, &
-            "(A13,I4,A1,I4,A1,I4,A1,I4,A1,I4)") &
-            'checkpoint B ', rank, ' ', new_dims(1), ' ', new_dims(2), &
-            ' ', new_dims(3), ' ', stagger
-          PRINT*, TRIM(debug_hs_message)
-          WRITE(debug_hs_message, &
-            "(A13,I4,A1,I4,A1,I4,A1,I4)") &
-            'checkpoint C ', rank, ' ', nx, ' ', ny, ' ', nz
-          PRINT*, TRIM(debug_hs_message)
-        END IF
+        ! IF (debug_hs) THEN
+        !   WRITE(debug_hs_message, &
+        !     "(A13,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4,A1,I4)") &
+        !     'checkpoint A ', rank, ' ', i0, ' ', i1, ' ', j0, ' ', j1, &
+        !     ' ', k0, ' ', k1, ' ', nx, ' ', ny, ' ', nz
+        !   PRINT*, TRIM(debug_hs_message)
+        !   WRITE(debug_hs_message, &
+        !     "(A13,I4,A1,I4,A1,I4,A1,I4,A1,I4)") &
+        !     'checkpoint B ', rank, ' ', new_dims(1), ' ', new_dims(2), &
+        !     ' ', new_dims(3), ' ', stagger
+        !   PRINT*, TRIM(debug_hs_message)
+        !   WRITE(debug_hs_message, &
+        !     "(A13,I4,A1,I4,A1,I4,A1,I4)") &
+        !     'checkpoint C ', rank, ' ', nx, ' ', ny, ' ', nz
+        !   PRINT*, TRIM(debug_hs_message)
+        ! END IF
+
           
         CALL sdf_write_plain_variable(sdf_handle, TRIM(temp_block_id), &
             TRIM(temp_name), TRIM(units), new_dims, stagger, &
