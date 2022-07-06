@@ -3623,13 +3623,17 @@ CONTAINS
 
     loc_x = 71 - nx_global_min
 
-    WRITE(filename, "(A2,I0.5,A1,I0.3,A4)") block_id, step, "-", rank, ".out"
+    WRITE(filename, "(A2,A1,I0.3,A4)") block_id, "-", rank, ".out"
     PRINT*, "FILE ", TRIM(filename), nx_global_min, nx_global_max
 
-    OPEN(67, file = TRIM(filename), status = 'new')
+    IF (step == 0) THEN
+      OPEN(67, file = TRIM(filename), status = 'new', action = 'write')
+    ELSE
+      OPEN(67, file = TRIM(filename), status="old", position="append", action = 'write')
+    END IF
     DO iy = 1, ny
       DO iz = 1, nz
-        WRITE(67,*) iy+ny_global_min, iz+nz_global_min, array(loc_x, iy, iz)
+        WRITE(67,*) step, iy+ny_global_min, iz+nz_global_min, array(loc_x, iy, iz)
       END DO
     END DO
     CLOSE(67)
