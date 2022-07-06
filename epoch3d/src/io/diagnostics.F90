@@ -1894,9 +1894,8 @@ CONTAINS
         temp_block_id = TRIM(block_id)// '/c_' // TRIM(sub%name)
         temp_name = TRIM(name) // '/Core_' // TRIM(sub%name)
 
-        IF (rank == 0) THEN
-          PRINT*, 'SLICE', temp_block_id, temp_name
-        END IF
+        CALL hs_write_slice(block_id, array)
+
         i0 = ran_sec(1,1); i1 = ran_sec(2,1) - 1
         j0 = ran_sec(1,2); j1 = ran_sec(2,2) - 1
         k0 = ran_sec(1,3); k1 = ran_sec(2,3) - 1
@@ -3607,4 +3606,15 @@ CONTAINS
 
   END SUBROUTINE write_source_info
 
+  SUBROUTINE hs_write_slice(block_id, array)
+    CHARACTER(LEN=*), INTENT(IN) :: block_id 
+    REAL(num), DIMENSION(1-ng:,1-ng:,1-ng:), INTENT(IN) :: array
+
+    CHARACTER(LEN=1024) :: filename
+
+    WRITE(filename, "(A2,I0.5,A1,I0.3,A4)") block_id, step, "-", rank, ".out"
+    IF (rank == 0) THEN
+      PRINT*, "FILE", TRIM(filename)
+    END IF
+  END SUBROUTINE
 END MODULE diagnostics
