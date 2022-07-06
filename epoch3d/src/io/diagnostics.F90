@@ -378,10 +378,6 @@ CONTAINS
 
       nstep_prev = step
 
-      IF (rank == 0) THEN
-        PRINT*, 'n_subsets', n_subsets
-      END IF
-    
       DO isubset = 1, n_subsets
         errcode = 0
         sub => subset_list(isubset)
@@ -3610,17 +3606,32 @@ CONTAINS
     CHARACTER(LEN=*), INTENT(IN) :: block_id 
     REAL(num), DIMENSION(1-ng:,1-ng:,1-ng:), INTENT(IN) :: array
 
-    INTEGER:: nx_global_min, nx_global_max
+    INTEGER :: nx_global_min, nx_global_max
+    INTEGER :: ny_global_min, nz_global_min
+    INTEGER :: loc_x
+    INTEGER :: iy, iz
     CHARACTER(LEN=1024) :: filename
 
     nx_global_min = cell_x_min(x_coords+1)
     nx_global_max = cell_x_max(x_coords+1)
+    ny_global_min = cell_y_min(y_coords+1)
+    nz_global_min = cell_z_min(z_coords+1)
 
     IF (nx_global_min>70 .OR. nx_global_max<70) THEN
       RETURN
     END IF
 
+    loc_x = 71 - nx_global_min
+
     WRITE(filename, "(A2,I0.5,A1,I0.3,A4)") block_id, step, "-", rank, ".out"
-    PRINT*, "FILE ", TRIM(filename), cell_x_min, cell_x_max
+    PRINT*, "FILE ", TRIM(filename), nx_global_min, nx_global_max
+
+    OPEN(67, file = filename, status = 'new')
+    DO iy = 1, ny
+      DO iz = 1, nz
+        WRITE(67,*) iy+ny_global_min, iz+nz_global_min, array(loc_x, iy, iz)
+      END DO
+    END DO
+    CLOSE(67)
   END SUBROUTINE
 END MODULE diagnostics
