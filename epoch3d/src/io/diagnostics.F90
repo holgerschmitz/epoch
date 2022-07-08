@@ -3610,6 +3610,7 @@ CONTAINS
     INTEGER :: ny_global_min, nz_global_min
     INTEGER :: loc_x
     INTEGER :: iy, iz
+    INTEGER :: group, offset
     CHARACTER(LEN=1024) :: filename
 
     nx_global_min = cell_x_min(x_coords+1)
@@ -3622,18 +3623,21 @@ CONTAINS
     END IF
 
     loc_x = 71 - nx_global_min
+    offset = MOD(step, 100)
+    group = step / 100
 
-    WRITE(filename, "(A2,A1,I0.3,A4)") block_id, "-", rank, ".out"
+    WRITE(filename, "(A5,I0.2,A1,A2,A1,I0.3,A4)") &
+      "data-", group, "/", block_id, "-", rank, ".out"
     PRINT*, "FILE ", TRIM(filename), nx_global_min, nx_global_max
 
-    IF (step == 0) THEN
+    IF (offset == 0) THEN
       OPEN(67, file = TRIM(filename), status = 'new', action = 'write')
     ELSE
       OPEN(67, file = TRIM(filename), status="old", position="append", action = 'write')
     END IF
     DO iy = 1, ny
       DO iz = 1, nz
-        WRITE(67,*) step, iy+ny_global_min, iz+nz_global_min, array(loc_x, iy, iz)
+        WRITE(67,*) offset, iy+ny_global_min, iz+nz_global_min, array(loc_x, iy, iz)
       END DO
     END DO
     CLOSE(67)
