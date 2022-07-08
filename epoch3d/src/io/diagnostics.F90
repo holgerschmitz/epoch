@@ -3626,8 +3626,8 @@ CONTAINS
     offset = MOD(step, 100)
     group = step / 100
 
-    WRITE(filename, "(A5,I0.2,A1,A2,A1,I0.3,A4)") &
-      "data-", group, "/", block_id, "-", rank, ".out"
+    WRITE(filename, "(A5,I0.2,A3,A2,A1,I0.3,A4)") &
+      "data-", group, "00/", block_id, "-", rank, ".out"
     PRINT*, "FILE ", TRIM(filename), nx_global_min, nx_global_max
 
     IF (offset == 0) THEN
